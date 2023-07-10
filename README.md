@@ -75,4 +75,4 @@ print("Documento enviado para assinatura. ID do acordo:", agreement_id)
 ```
 
 ## Adobe Acrobat Sign
-![Imagem](https://www.adobe.com/content/dam/dx-dc/us/en/sign…solution/DC_E-sign_Test_Mobile_Loupe2.png.img.png)
+![Imagem](https://www.adobe.com/content/dam/dx-dc/us/en/acrobat/1_Device_Marquee.png.img.png)
