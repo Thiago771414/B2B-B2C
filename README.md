@@ -9,69 +9,91 @@ No cenário B2C, o Adobe Acrobat Sign oferece aos consumidores a capacidade de a
 Agora, para ilustrar o uso do Adobe Acrobat Sign, vamos fornecer um exemplo de código em Python para enviar um documento para assinatura usando a API REST do Adobe Sign:
 
 ```csharp
-import requests
-import json
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
-# Definir as credenciais da API do Adobe Sign
-client_id = "SEU_CLIENT_ID"
-client_secret = "SEU_CLIENT_SECRET"
+class Program
+{
+    static HttpClient client = new HttpClient();
 
-# Obter um access token usando as credenciais
-def get_access_token():
-    auth_url = "https://api.echosign.com/oauth/token"
-    payload = {
-        "client_id": client_id,
-        "client_secret": client_secret,
-        "grant_type": "client_credentials"
-    }
-    response = requests.post(auth_url, data=payload)
-    access_token = json.loads(response.content)["access_token"]
-    return access_token
+    static async System.Threading.Tasks.Task Main(string[] args)
+    {
+        string clientId = "SEU_CLIENT_ID";
+        string clientSecret = "SEU_CLIENT_SECRET";
+        string filePath = "caminho_para_seu_arquivo.pdf";
+        string recipientEmail = "exemplo@email.com";
 
-# Enviar documento para assinatura
-def send_for_signature(file_path, recipient_email):
-    access_token = get_access_token()
-    api_url = "https://api.echosign.com/api/rest/v6/transientDocuments"
-    
-    # Fazer upload do documento para a API
-    headers = {
-        "Access-Token": access_token,
-        "Content-Type": "application/pdf"
+        string accessToken = await GetAccessToken(clientId, clientSecret);
+        string transientDocId = await UploadDocument(filePath, accessToken);
+        string agreementId = await SendForSignature(transientDocId, recipientEmail, accessToken);
+
+        Console.WriteLine("Documento enviado para assinatura. ID do acordo: " + agreementId);
     }
-    files = {
-        "File": open(file_path, "rb")
+
+    static async System.Threading.Tasks.Task<string> GetAccessToken(string clientId, string clientSecret)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.echosign.com/oauth/token");
+        request.Content = new StringContent($"client_id={clientId}&client_secret={clientSecret}&grant_type=client_credentials");
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+        var response = await client.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
+        return json.access_token;
     }
-    response = requests.post(api_url, headers=headers, files=files)
-    transient_doc_id = json.loads(response.content)["transientDocumentId"]
-    
-    # Enviar para assinatura
-    agreement_url = "https://api.echosign.com/api/rest/v6/agreements"
-    payload = {
-        "fileInfos": [
+
+    static async System.Threading.Tasks.Task<string> UploadDocument(string filePath, string accessToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.echosign.com/api/rest/v6/transientDocuments");
+        request.Headers.Add("Access-Token", accessToken);
+
+        var fileContent = new StreamContent(File.OpenRead(filePath));
+        var fileFormDataContent = new MultipartFormDataContent();
+        fileFormDataContent.Add(fileContent, "File", Path.GetFileName(filePath));
+
+        request.Content = fileFormDataContent;
+
+        var response = await client.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
+        return json.transientDocumentId;
+    }
+
+    static async System.Threading.Tasks.Task<string> SendForSignature(string transientDocId, string recipientEmail, string accessToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.echosign.com/api/rest/v6/agreements");
+        request.Headers.Add("Access-Token", accessToken);
+
+        var payload = new
+        {
+            fileInfos = new[]
             {
-                "transientDocumentId": transient_doc_id
-            }
-        ],
-        "recipients": [
+                new
+                {
+                    transientDocumentId = transientDocId
+                }
+            },
+            recipients = new[]
             {
-                "email": recipient_email
+                new
+                {
+                    email = recipientEmail
+                }
             }
-        ]
-    }
-    headers = {
-        "Access-Token": access_token,
-        "Content-Type": "application/json"
-    }
-    response = requests.post(agreement_url, headers=headers, data=json.dumps(payload))
-    agreement_id = json.loads(response.content)["id"]
-    return agreement_id
+        };
 
-# Exemplo de uso
-file_path = "caminho_para_seu_arquivo.pdf"
-recipient_email = "exemplo@email.com"
-agreement_id = send_for_signature(file_path, recipient_email)
-print("Documento enviado para assinatura. ID do acordo:", agreement_id)
+        string payloadJson = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+        request.Content = new StringContent(payloadJson);
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
+        var response = await client.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
+        return json.id;
+    }
+}
 ```
 
 ## Adobe Acrobat Sign
