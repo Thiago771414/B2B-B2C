@@ -95,7 +95,7 @@ class Program
     }
 }
 ```
-# ID de Rastreabilidade
+## ID de Rastreabilidade
 A rastreabilidade se refere à capacidade de rastrear e acompanhar informações em um sistema, identificando a origem e o destino de uma determinada ação ou evento. Um ID de rastreabilidade é um identificador único associado a uma ação ou evento específico, permitindo que seja rastreado ao longo do sistema.
 Por exemplo, em um sistema distribuído com vários microsserviços, cada solicitação ou transação pode ser associada a um ID de rastreabilidade exclusivo. Esse ID pode ser usado para registrar informações relacionadas à solicitação em cada serviço que ela passa, permitindo que você acompanhe todo o caminho da solicitação e identifique possíveis problemas ou gargalos.
 
@@ -104,7 +104,7 @@ O ID de rastreabilidade é especialmente útil em sistemas complexos, onde vári
 ```csharp
 https://api.echosign.com/api/rest/v6/agreements?apiKey=SUA_CHAVE_API
 ```
-#Idempotência
+## Idempotência
 A idempotência é um conceito importante para garantir que uma operação seja executada apenas uma vez, mesmo que seja solicitada várias vezes. No caso do Adobe Acrobat Sign, podemos simular a idempotência atribuindo um ID único a cada solicitação de assinatura. Em seguida, podemos verificar se o ID já existe antes de enviar a solicitação. Se o ID já existir, podemos retornar o resultado anterior em vez de enviar uma nova solicitação.
 
 ```csharp
@@ -119,7 +119,7 @@ if (string.IsNullOrEmpty(agreementId))
 return agreementId;
 
 ```
-# Async API:
+## Async API:
 O uso de uma API assíncrona é benéfico quando se espera que as operações tenham um tempo de resposta prolongado. Podemos simular uma chamada assíncrona para a API do Adobe Acrobat Sign usando o modificador async e await no método de envio de solicitação.
 
 ```csharp
@@ -134,7 +134,7 @@ async Task<string> SendForSignatureAsync(string file_path, string recipient_emai
 }
 ```
 
-# API First:
+## API First:
 O conceito de API First envolve projetar e desenvolver a API antes de qualquer outra camada do sistema. Podemos simular esse conceito criando uma especificação da API do Adobe Acrobat Sign usando o formato OpenAPI (anteriormente conhecido como Swagger). Em seguida, podemos gerar automaticamente os controladores e os modelos C# usando ferramentas como o Swagger Codegen.
 
 ```csharp
@@ -143,7 +143,7 @@ O conceito de API First envolve projetar e desenvolver a API antes de qualquer o
 // Executar o Swagger Codegen para gerar os controladores e modelos C#
 swagger-codegen generate -i adobe-acrobat-sign-api.yaml -l csharp
 ```
-#Event-Driven Architecture:
+## Event-Driven Architecture:
 A arquitetura orientada a eventos permite que os componentes se comuniquem de forma assíncrona por meio de eventos. Podemos simular a arquitetura orientada a eventos no contexto do Adobe Acrobat Sign usando um sistema de mensagens para publicar e consumir eventos relacionados às assinaturas.
 
 ```csharp
@@ -158,7 +158,7 @@ SubscribeToEvent("AssinaturaEnviada", (agreementId) =>
     ProcessAgreement(agreementId);
 });
 ```
-# Telemetria
+## Telemetria
 A telemetria é importante para monitorar o desempenho, a disponibilidade e o uso da API do Adobe Acrobat Sign. Podemos simular a telemetria registrando métricas e eventos relevantes ao longo da execução do código.
 
 ```csharp
@@ -176,7 +176,7 @@ Telemetry.TrackEvent("AssinaturaEnviada", new Dictionary<string, string>
     { "RecipientEmail", recipient_email }
 });
 ```
-# Circuit Breaker
+## Circuit Breaker
 O Circuit Breaker é um padrão de projeto que permite evitar o impacto de falhas temporárias em serviços remotos. Podemos simular o uso do Circuit Breaker ao lidar com falhas na API do Adobe Acrobat Sign, fornecendo uma resposta alternativa ou retornando um valor em cache quando a API estiver inacessível.
 
 ```csharp
