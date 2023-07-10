@@ -6,7 +6,7 @@ No contexto B2B, o Adobe Acrobat Sign permite que empresas realizem processos de
 
 No cenário B2C, o Adobe Acrobat Sign oferece aos consumidores a capacidade de assinar documentos eletronicamente de maneira rápida e conveniente. Isso pode incluir contratos de locação, acordos de serviços, formulários de inscrição e muito mais. Os consumidores podem assinar documentos facilmente usando dispositivos móveis, como smartphones ou tablets, proporcionando uma experiência sem complicações.
 
-Agora, para ilustrar o uso do Adobe Acrobat Sign, vamos fornecer um exemplo de código em Python para enviar um documento para assinatura usando a API REST do Adobe Sign:
+Agora, para ilustrar o uso do Adobe Acrobat Sign, vamos fornecer um exemplo de código em csharp para enviar um documento para assinatura usando a API REST do Adobe Sign:
 
 ```csharp
 using System;
